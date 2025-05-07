@@ -30,3 +30,7 @@ icon.filename = icon.png
 
 # Orientación
 orientation = portrait
+
+android.sdk = 34
+android.ndk = 25b
+android.build_tools_version = 34.0.0  # Versión más reciente
