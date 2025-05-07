@@ -22,14 +22,24 @@ jobs:
       run: |
         pip install buildozer==1.5.0 python-for-android==2024.1.21 cython==0.29.36
 
-    - name: Accept Android licenses
+    - name: Initialize Android SDK
       run: |
-        mkdir -p ~/.android/licenses
-        echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.android/licenses/android-sdk-license
+        mkdir -p ~/.buildozer/android/platform/android-sdk
+        buildozer android update  # Genera estructura inicial
 
-    - name: Install Android SDK components
+    - name: Setup Android SDK
       run: |
-        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platform-tools" "platforms;android-34"
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip commandlinetools-linux-*.zip -d ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+
+    - name: Accept licenses
+      run: |
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+    - name: Install Android components
+      run: |
+        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platforms;android-34" "platform-tools"
 
     - name: Build APK
       run: |
